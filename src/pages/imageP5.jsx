@@ -55,13 +55,15 @@ function Image(){
       p5.translate(p5.width/2, p5.height/2);//移動到畫布中心
       p5.rotate(rotateRef.current);
       p5.imageMode(p5.CENTER);
-      p5.image(topRef.current, 0, 0, 300, 50)
+      p5.image(topRef.current, 0, 0, 300, 300)
       p5.pop();
     }
   }
   //旋轉右圖片
   const rotateRight = () => {
     rotateRef.current += Math.PI / 4;
+    console.log(topRef.current.width);
+    console.log(topRef.current.height);
     if( p5Ref.current){
       p5Ref.current.redraw();
     }
@@ -87,7 +89,7 @@ function Image(){
       p5.translate(p5.width/2, p5.height/2);
       p5.rotate(rotateRef.current);
       p5.imageMode(p5.CENTER);
-      p5.image(topRef.current, 0, 0, 300, 50);
+      p5.image(topRef.current, 0, 0, 300, 300);
       p5.pop();
     }
   }
@@ -97,27 +99,27 @@ function Image(){
   return(
     <div>
       {!isOverlaid ? (
-        <>
-        <div className='canvas-container'>
-          <Sketch
-            setup={setup1}
-            draw={draw1}
-            preload={preload1}
-          />
-          <Sketch
-            setup={setup2}
-            draw={draw2}
-            preload={preload2}
-          />
-        </div>
-        </>
-      ) : (
-        <>
-        <div className='canvas-container'>
-          <Sketch
-            setup={setupCombined}
-            draw={drawCombined}
-          />
+        <div style={{display: 'flex', alignItems:'center', justifyContent:'center'}}>
+          <div className='canvas-container'>
+            <Sketch
+              setup={setup1}
+              draw={draw1}
+              preload={preload1}
+            />
+            <Sketch
+              setup={setup2}
+              draw={draw2}
+              preload={preload2}
+            />
+          </div>
+          </div>
+        ) : (
+          <>
+          <div className='canvas-container'>
+            <Sketch
+              setup={setupCombined}
+              draw={drawCombined}
+            />
         </div>
         </>
       )}

@@ -26,6 +26,12 @@ function Nav(){
       <button onClick={() => navigate('/imageCanvas')}>
         疊圖 canvas
       </button>
+      <button onClick={() => navigate('/pinball')}>
+        彈珠台
+      </button>
+      <button onClick={() => navigate('/gamepage')}>
+        spline
+      </button>
     </div>
   )
 }

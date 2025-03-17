@@ -4,13 +4,14 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import Firework from './pages/firework';
-import Flocking from './pages/flocking';
 import Scratch from './pages/scratch';
 import Rainny from './pages/rainny';
 import Snow from './pages/snow';
 import ImageP5 from './pages/imageP5';
 import ImageCanvas from './pages/imageCanvas';
 import reportWebVitals from './reportWebVitals';
+import Pinball from './pages/pinball';
+import GamePage from './pages/GamePage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -19,12 +20,13 @@ root.render(
       <Routes>
         <Route path='/' element={<App/>}/>
         <Route path='/firework' element={<Firework/>}/>
-        <Route path='/flocking' element={<Flocking/>}/>
         <Route path='/scratch' element={<Scratch />}/>
         <Route path='/rainny' element={<Rainny />}/>
         <Route path='/snow' element={<Snow />}/>
         <Route path='/imageP5' element={<ImageP5/>}/>
         <Route path='/imageCanvas' element={<ImageCanvas/>}/>
+        <Route path='/pinball' element={<Pinball/>}/>
+        <Route path='/gamepage' element={<GamePage/>}/>
       </Routes>
      </div>
     </BrowserRouter>

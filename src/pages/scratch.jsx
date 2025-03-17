@@ -1,11 +1,10 @@
 import Sketch from 'react-p5';
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import {  useRef, useState } from 'react';
 import '../App.css';
 import Nav from '../componet/nav';
 
 function Scratch(){
-  const navigate = useNavigate();
+  
   const bottomImgRef = useRef(null);  
   const topLayerRef = useRef(null);
   const imgWidthRef = useRef(null);
@@ -24,33 +23,33 @@ function Scratch(){
   }
 
   const setup = (p5, canvasParentRef) => {
-    p5.createCanvas(p5.windowWidth, p5.windowHeight).parent(canvasParentRef);
-    p5.background(0,0,0);
+    p5.createCanvas(p5.windowWidth, p5.windowHeight-100).parent(canvasParentRef);
+    p5.background(0, 0, 0);
 
-    //設定圖片大小
-    imgWidthRef.current = 400;
-    imgHeightRef.current = 400;
+    // 設定圖片大小
+    imgWidthRef.current = Math.min(400, p5.windowWidth - 50);
+    imgHeightRef.current = imgWidthRef.current; // 保持正方形
     totalPixelsRef.current = imgWidthRef.current * imgHeightRef.current;
-    //設定圖片位置
-    imgXRef.current = p5.windowWidth/2-200;
-    imgYRef.current = p5.windowHeight/2-200;
 
-    //創建覆蓋的銀灰層
+    // 設定圖片位置
+    imgXRef.current = (p5.windowWidth - imgWidthRef.current) / 2;
+    imgYRef.current = (p5.windowHeight - imgHeightRef.current) / 2;
+
+    // 創建覆蓋的銀灰層
     topLayerRef.current = p5.createGraphics(imgWidthRef.current, imgHeightRef.current);
-    topLayerRef.current.background(192,192,192);
-    topLayerRef.current.fill(255); //字的顏色
-    topLayerRef.current.textSize(30); //字的大小
-    topLayerRef.current.textFont('Arial'); //字體
-    topLayerRef.current.textAlign(p5.CENTER, p5.CENTER); //文字位置
-    topLayerRef.current.text('刮刮樂ABC', imgWidthRef.current/2, imgHeightRef.current/2)
+    topLayerRef.current.background(192, 192, 192);
+    topLayerRef.current.fill(255); // 字的顏色
+    topLayerRef.current.textSize(30); // 字的大小
+    topLayerRef.current.textFont('Arial'); // 字體
+    topLayerRef.current.textAlign(p5.CENTER, p5.CENTER); // 文字位置
+    topLayerRef.current.text('刮刮樂ABC', imgWidthRef.current / 2, imgHeightRef.current / 2);
 
-    //繪製圖片及銀灰層
+    // 繪製圖片及銀灰層
     if (bottomImgRef.current) {
       p5.image(bottomImgRef.current, imgXRef.current, imgYRef.current, imgWidthRef.current, imgHeightRef.current);
       p5.image(topLayerRef.current, imgXRef.current, imgYRef.current);
       setImageReady(true);
     }
-    
   };
 
   //計算被擦除的面積
@@ -76,30 +75,28 @@ function Scratch(){
   };
 
   const handleErase = (p5, x, y) => {
-    if (!imageReady || !topLayerRef.current) return;
-    
-    const brushSize = 20;  // 觸控時使用稍大的筆刷
-    
+    isInteractingRef.current = true; // 確保在觸控開始時設置為 true
+    if (!imageReady) return;
+
+    const brushSize = 30; // 定義筆刷大小
+
     // 計算相對於覆蓋層的位置
     const relativeX = x - imgXRef.current;
     const relativeY = y - imgYRef.current;
-    
-    // 檢查是否在覆蓋層範圍內
+
+    // 檢查相對位置是否在覆蓋層的範圍內
     if (relativeX >= 0 && relativeX < imgWidthRef.current && relativeY >= 0 && relativeY < imgHeightRef.current) {
-      // 在覆蓋層上擦除
       topLayerRef.current.erase();
-      topLayerRef.current.noStroke();
       topLayerRef.current.ellipse(relativeX, relativeY, brushSize, brushSize);
       topLayerRef.current.noErase();
-      
-      // 每 5 幀計算一次擦除百分比
-      if (p5.frameCount % 5 === 0) {
-        const percentage = calculateErasedPixels();
-        setErasedPercentage(percentage);
-      }
     }
-  };
-
+    
+    // 每 5 幀計算一次已刮除的百分比
+    if (p5.frameCount % 5 === 0) {
+      const erasedPixels = calculateErasedPixels();
+      setErasedPercentage(erasedPixels);
+    }
+  }
 
   const draw = (p5) => {
     //每10幀計算一次刮除百分比
@@ -113,8 +110,8 @@ function Scratch(){
     }
 
     p5.background(0, 0, 0);
-    p5.image(bottomImgRef.current, p5.windowWidth/2-200, p5.windowHeight/2-200, 400, 300);
-    p5.image(topLayerRef.current, p5.windowWidth/2-200, p5.windowHeight/2-200);
+    p5.image(bottomImgRef.current, p5.windowWidth/2-(p5.windowWidth-50)/2, p5.windowHeight/2-(p5.windowWidth-50)/2, p5.windowWidth-50, p5.windowWidth-50);
+    p5.image(topLayerRef.current, p5.windowWidth/2-(p5.windowWidth-50)/2, p5.windowHeight/2-(p5.windowWidth-50)/2, p5.windowWidth-50, p5.windowWidth-50);
     
     p5.fill(255);
     p5.textSize(24);
@@ -133,6 +130,11 @@ function Scratch(){
   // 觸控事件處理
   const touchStarted = (p5) => {
     isInteractingRef.current = true;
+    // 處理所有觸控點
+    for (let i = 0; i < p5.touches.length; i++) {
+      const touch = p5.touches[i];
+      handleErase(p5, touch.x, touch.y);
+    }
     // 防止默認行為（如滾動）
     return false;
   };
@@ -145,7 +147,7 @@ function Scratch(){
       handleErase(p5, p5.touches[i].x, p5.touches[i].y);
     }
     
-    // 防止默認行為
+    // 防止默認行為（如滾動）
     return false;
   };
 
@@ -158,13 +160,15 @@ function Scratch(){
   const windowResized = (p5) => {
     p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
 
-    //重新計算圖片位置
-    imgXRef.current = p5.windowWidth/2 - 200;
-    imgYRef.current = p5.windowHeight/2 - 200;
-    p5.background(0,0,0);
+    // 重新計算圖片大小和位置
+    imgWidthRef.current = Math.min(400, p5.windowWidth - 50);
+    imgHeightRef.current = imgWidthRef.current; // 保持正方形
+    imgXRef.current = (p5.windowWidth - imgWidthRef.current) / 2;
+    imgYRef.current = (p5.windowHeight - imgHeightRef.current) / 2;
+
+    p5.background(0, 0, 0);
     p5.image(bottomImgRef.current, imgXRef.current, imgYRef.current, imgWidthRef.current, imgHeightRef.current);
     p5.image(topLayerRef.current, imgXRef.current, imgYRef.current);
-
   };
 
 

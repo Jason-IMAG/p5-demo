@@ -14,12 +14,21 @@ function Firework(){
 		const explosionYRef = useRef(null);
 		const isExplosionRef = useRef(false);
 		const hueRef = useRef(0);
+		const lastFireTimeRef = useRef(0);
 		
 
     useEffect(() => {
         const { Engine, World } = Matter;
 
-        const engine = Engine.create();
+        const engine = Engine.create({
+						enableSleeping: false,
+					timing: {
+							timeScale: 1,
+							timestamp: 0,
+							lastDelta: 16.666, // 約60fps
+							lastElapsed: 16.666
+					}
+				});
         engineRef.current = engine;      //初始化 engineRef
         worldRef.current = engine.world; //初始化 worldeRef
         engine.gravity.y = 0.1;          //設定重力
@@ -95,7 +104,13 @@ function Firework(){
 		};
 
 		const mousePressed = (p5) => {
-			
+      //防止短時間連發造成畫面有問題
+			const currentTime = Date.now();
+			if (currentTime - lastFireTimeRef.current < 500) {
+        console.log("發射冷卻中...");
+        return; // 如果在冷卻時間內，忽略這次點擊
+      }
+
 			const clickableArea = {
 				x: p5.windowWidth/2 - 20,
 				y: p5.windowHeight - 70,
@@ -109,11 +124,26 @@ function Firework(){
 				p5.mouseY >= clickableArea.y && 
 				p5.mouseY <= clickableArea.y + clickableArea.height
 			) {
+
+				if (fireBallRef.current) {
+					console.log("已有火球在飛行中");
+					return; // 如果已經有火球，忽略這次點擊
+			  }
 				createFireBall(p5, p5.windowWidth/2 , p5.windowHeight -70);
 				hueRef.current = p5.random(0,255);
+
+				lastFireTimeRef.current = currentTime;
 				
 			}
+
+			
 		};
+		const touchStarted = (p5) => {
+			// 在這裡調用與 mousePressed 相同的邏輯
+			// 但要防止默認行為，避免觸發額外的滑鼠事件
+			mousePressed(p5);
+			return false; // 防止默認行為
+	};
 
 		const createFireBall = (p5, x, y) => {
 			const speed = -25;
@@ -186,7 +216,8 @@ function Firework(){
 					draw={draw} 
 					mousePressed={mousePressed}
 					windowResized={windowResized}
-					/>
+					touchStarted={touchStarted}
+				/>
 				<Nav/>
 			</div>
     )

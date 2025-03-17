@@ -66,7 +66,7 @@ function ImageCanvas(){
     canvas.height = 300;
 
     const imgWidth = 300;
-    const imgHeight = 50;
+    const imgHeight = 300;
     const x = (canvas.width - imgWidth) /2;
     const y = (canvas.height - imgHeight) /2;
     
@@ -99,7 +99,7 @@ function ImageCanvas(){
     canvas.height = 300;
     
     const imgWidth = 300;
-    const imgHeight = 50;
+    const imgHeight = 300;
     const x = (canvas.width - imgWidth) /2;
     const y = (canvas.height - imgHeight) /2;
 
@@ -145,17 +145,19 @@ function ImageCanvas(){
 
   return(
     <div>
-      <div className="canvas-container">
-        {!isOverlaid ? (
-          <>
-          <canvas ref={canvasRef}/>
-          <canvas ref={canvas2Ref}/>
-          </>
-        ) : (
-          <>
-          <canvas ref={canvasOverRef}/>
-          </>
-        ) }
+      <div style={{display: 'flex', alignItems:'center', justifyContent:'center'}}> 
+        <div className="canvas-container">
+          {!isOverlaid ? (
+            <>
+            <canvas ref={canvasRef}/>
+            <canvas ref={canvas2Ref}/>
+            </>
+          ) : (
+            <>
+            <canvas ref={canvasOverRef}/>
+            </>
+          ) }
+        </div>
       </div>
       <div className = 'button-container'>
         <button onClick={() => setRotate(rotate + Math.PI/4)}>

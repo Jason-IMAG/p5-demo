@@ -1,13 +1,11 @@
 import Sketch from "react-p5";
 import "../App.css";
-import { useNavigate } from 'react-router-dom';
 import Nav from '../componet/nav';
 
 function Rainny() {
   let drops = [];
   const dropsCount = 500;
   const umbrellaSize = 300;
-  const navigate = useNavigate();
   
   let minHeight ;
 

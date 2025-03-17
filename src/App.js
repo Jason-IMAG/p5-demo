@@ -1,6 +1,5 @@
 import Sketch from 'react-p5';
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './App.css';
 import { FaRegSmileBeam } from "react-icons/fa";
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -11,7 +10,6 @@ function App() {
   const [ minusX, setMinusX ] = useState(1);
   const [ minusY, setMinusY ] = useState(1);
   const [ count, setCount, ] = useState(0);
-  const navigate = useNavigate();
 
   //避免useState狀態改變react重新渲染之後 位置直接重置回原點
   const positionRef =useRef({
@@ -101,10 +99,14 @@ function App() {
 
     
 
+    // 獲取觸控位置，如果沒有觸控則使用滑鼠位置
+    const currentX = p5.touches.length > 0 ? p5.touches[0].x : p5.mouseX;
+    const currentY = p5.touches.length > 0 ? p5.touches[0].y : p5.mouseY;
+
     //畫左眼
     let leftX = 150;
     let leftY = 100;
-    let leftAngle = p5.atan2(p5.mouseY - leftY, p5.mouseX - leftX);
+    let leftAngle = p5.atan2(currentY - leftY, currentX - leftX);
     p5.push();
     p5.translate(leftX, leftY);
     p5.fill(255);
@@ -117,7 +119,7 @@ function App() {
     //畫右眼
     let rightX = 250;
     let rightY = 100;
-    let rightAngle = p5.atan2(p5.mouseY - rightY, p5.mouseX - rightX);
+    let rightAngle = p5.atan2(currentY - rightY, currentX - rightX);
     p5.push();
     p5.translate(rightX, rightY);
     p5.fill(255);
@@ -127,12 +129,17 @@ function App() {
     p5.ellipse(12.5, 0, 25, 25);
     p5.pop();
   }
-
+  const windowResized = (p5) => {
+    // 當視窗大小改變時，重新設置畫布大小
+    p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+    p5.background(0);
+  };
   return (
     <div className="App">
       <Sketch
         setup={setup}
         draw={draw}
+        windowResized={windowResized}
       />
       <Nav/>
     </div>

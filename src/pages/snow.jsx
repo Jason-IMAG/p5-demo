@@ -1,20 +1,16 @@
 import Sketch from "react-p5";
 import Matter from "matter-js";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import '../App.css';
 import Nav from '../componet/nav';
 
 function Snow (){
 
-  const navigate = useNavigate();
   const engineRef = useRef(null);
   const worldRef = useRef(null);
   const snowRef = useRef([]);
   const snowSpeedRef = useRef(0); 
   const roofRef = useRef(null);
-  const baseRef = useRef(null);
-  const countRef = useRef(0);
   const [p5, setP5] = useState(null);
   const [isReady, setIsReady] = useState(false);
 
@@ -40,9 +36,9 @@ function Snow (){
   //確保在載入matter及p5之後才創建雪球
   useEffect(()=>{
     if(isReady && worldRef.current && p5){
-      createSnow(p5, 400);
+      createSnow(p5, 200);
       // createHouse(p5);
-      createRoof(p5.windowWidth/2, p5.windowHeight - 300, 200, 100)
+      createRoof(p5.windowWidth/2, p5.windowHeight - 300, p5.windowWidth/3, 70)
       console.log(snowRef.current[0].id);
     }
     
@@ -84,9 +80,9 @@ function Snow (){
     p5.pop();
 
     //每800幀多創建80個雪球 避免屋頂積太多雪球變太少
-    if(snowRef.current.length < 1000){
+    if(snowRef.current.length < 300){
       if(p5.frameCount % 800 === 0 ){
-        createSnow(p5, 80);
+        createSnow(p5, 30);
         console.log(snowRef.current.length);
       }
     }
@@ -99,9 +95,9 @@ function Snow (){
       p5.fill(255, 0, 0);
       p5.noStroke();
       p5.triangle(
-        pos.x, pos.y-67, 
-        pos.x + 200, pos.y+33, 
-        pos.x - 200, pos.y+33 
+        pos.x, pos.y-45, 
+        pos.x + p5.windowWidth/3, pos.y+23, 
+        pos.x - p5.windowWidth/3, pos.y+23 
       )
 
     }
@@ -123,13 +119,13 @@ function Snow (){
           frictionAir:0.01,
           density: 0.05,
           friction:0.01,
-          restitution: 0.2,
+          restitution: 0.01,
         }
       )
       
       Matter.Body.setVelocity(snow,{
         x: p5.random(-snowSpeedRef.current, snowSpeedRef.current),
-        y: p5.random(0,2)
+        y: p5.random(0,1)
       })
       Matter.World.add(worldRef.current, snow);
       snowRef.current.push(snow);
