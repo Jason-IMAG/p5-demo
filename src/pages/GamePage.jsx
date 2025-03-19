@@ -16,7 +16,7 @@ function GamePage() {
       ...data
     }));
     
-    console.log('從 Spline 接收到的數據:', data);
+   
     
     // 可以在這裡添加其他邏輯，例如：
     if (data.health && data.health <= 0) {

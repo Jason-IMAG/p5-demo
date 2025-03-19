@@ -12,7 +12,7 @@ import ImageCanvas from './pages/imageCanvas';
 import reportWebVitals from './reportWebVitals';
 import Pinball from './pages/pinball';
 import GamePage from './pages/GamePage';
-
+import Spline from './pages/spline';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
@@ -26,7 +26,7 @@ root.render(
         <Route path='/imageP5' element={<ImageP5/>}/>
         <Route path='/imageCanvas' element={<ImageCanvas/>}/>
         <Route path='/pinball' element={<Pinball/>}/>
-        <Route path='/gamepage' element={<GamePage/>}/>
+        <Route path='/gamePage' element={<GamePage/>}/>
       </Routes>
      </div>
     </BrowserRouter>

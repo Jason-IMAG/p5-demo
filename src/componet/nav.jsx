@@ -29,7 +29,7 @@ function Nav(){
       <button onClick={() => navigate('/pinball')}>
         彈珠台
       </button>
-      <button onClick={() => navigate('/gamepage')}>
+      <button onClick={() => navigate('/gamePage')}>
         spline
       </button>
     </div>
