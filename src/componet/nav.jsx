@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 function Nav(){
   const navigate = useNavigate();
   return(
-    <div className='nav'>
+    <div className='nav' style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
       <button onClick={() => navigate('/')}>
        首頁
       </button>

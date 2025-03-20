@@ -134,12 +134,12 @@ function App() {
   const obstacles = [...obstacles1, ...obstacles2, ...obstacles3, ...obstacles4, ...obstacles5, ...obstacles6];
 
     //地板
-    const ground = Bodies.rectangle(scaleX(400), scaleY(800), scaleX(500), scaleY(20), { 
-      isStatic: true,
-      angle: Math.PI/25,
-      restitution:0.1 ,
-      friction:0.001  
-    });
+    // const ground = Bodies.rectangle(scaleX(400), scaleY(800), scaleX(500), scaleY(20), { 
+    //   isStatic: true,
+    //   angle: Math.PI/25,
+    //   restitution:0.1 ,
+    //   friction:0.001  
+    // });
     
     //牆壁
     const walls = [
@@ -281,7 +281,7 @@ function App() {
 
 
     //加入所有物體到世界
-    Composite.add(engine.world, [...walls, circle, ground,  ...obstacles, moveBall, moveBall2, boxA, boxB, boxC, boxD, boxE, ...arcPath1, ...arcPath2, spring, rock ]);
+    Composite.add(engine.world, [...walls, circle,  ...obstacles, moveBall, moveBall2, boxA, boxB, boxC, boxD, boxE, ...arcPath1, ...arcPath2, spring, rock ]);
     //加入滑鼠控制到世界
     Composite.add(engine.world, mouseConstraint);
     //啟動渲染
@@ -309,20 +309,20 @@ function App() {
 
     // 添加觸控事件處理
     const handleTouchStart = (event) => {
-      // 檢查觸控點是否在彈簧附近
+      // 檢查觸控點是否在 BoxE 附近
       const touchX = event.touches[0].clientX;
       const touchY = event.touches[0].clientY;
       const rect = render.canvas.getBoundingClientRect();
       const canvasX = touchX - rect.left;
       const canvasY = touchY - rect.top;
       
-      // 計算觸控點與彈簧位置的距離
-      const dx = canvasX - rock.position.x;
-      const dy = canvasY - rock.position.y;
+      // 計算觸控點與 BoxE 位置的距離
+      const dx = canvasX - boxE.position.x;
+      const dy = canvasY - boxE.position.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
       
-      // 如果觸控點在彈簧附近，啟動彈力
-      if (distance < scaleX(50)) {
+      // 如果觸控點在 BoxE 附近，啟動彈力
+      if (distance < scaleX(50)) {  // 可以調整這個值來改變觸發範圍
         spring.stiffness = 0.1;
         event.preventDefault();
       }
@@ -362,7 +362,7 @@ function App() {
 
 
   return (
-    <>
+    <div style={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
       <div
         ref={sceneRef}
         style={{
@@ -373,8 +373,9 @@ function App() {
           overflow:'auto'
         }} 
       />
+      <h1>點擊紅色方塊發射</h1>
       <Nav/>
-    </>
+    </div>
   );
 }
 
