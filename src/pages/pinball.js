@@ -94,7 +94,7 @@ function App() {
       pointA: anchor, 
       bodyB: rock, 
       length: 0.1,
-      damping: 0.1 ,
+      damping: 0.08,
       stiffness: 0
     });
 
@@ -239,6 +239,11 @@ function App() {
     render:{ fillStyle:'#030402'}
   });
 
+  const moveBall3 = Bodies.circle(scaleX(450), scaleY(600), scaleX(10),{
+    isStatic: true,
+    render:{ fillStyle:'#030402'}
+  });
+
   //加入滑鼠控制
   const mouse = Mouse.create(render.canvas);
   const mouseConstraint = MouseConstraint.create(engine, {
@@ -254,11 +259,12 @@ function App() {
   //啟動事件
   Events.on(engine, 'beforeUpdate', () => {
     //計算讓球上下移動的y軸
-    const px = scaleX(350) + scaleX(150) * Math.sin(engine.timing.timestamp * 0.002);
+    const px1 = scaleX(350) + scaleX(150) * Math.sin(engine.timing.timestamp * 0.002);
+    const px2 = scaleX(350) + scaleX(150) * -Math.sin(engine.timing.timestamp * 0.002);
     //讓障礙物動起來
-    Body.setPosition(moveBall, { x:px, y:scaleY(230)}, true)
-    Body.setPosition(moveBall2, { x:px, y:scaleY(430)}, true)
-
+    Body.setPosition(moveBall, { x:px1, y:scaleY(230)}, true)
+    Body.setPosition(moveBall2, { x:px2, y:scaleY(430)}, true)
+    Body.setPosition(moveBall3, { x:px1, y:scaleY(630)}, true)
   });
   Events.on(engine, 'afterUpdate', () => {
     // 檢查球是否掉出畫面
@@ -281,7 +287,7 @@ function App() {
 
 
     //加入所有物體到世界
-    Composite.add(engine.world, [...walls, circle,  ...obstacles, moveBall, moveBall2, boxA, boxB, boxC, boxD, boxE, ...arcPath1, ...arcPath2, spring, rock ]);
+    Composite.add(engine.world, [...walls, circle,  ...obstacles, moveBall, moveBall2, moveBall3, boxA, boxB, boxC, boxD, boxE, ...arcPath1, ...arcPath2, spring, rock ]);
     //加入滑鼠控制到世界
     Composite.add(engine.world, mouseConstraint);
     //啟動渲染
@@ -370,7 +376,8 @@ function App() {
           height:'80vh',
           margin:'auto',
           marginTop:'10px',
-          overflow:'auto'
+          touchAction: 'none', 
+          overflow:'hidden'
         }} 
       />
       <h1>點擊紅色方塊發射</h1>

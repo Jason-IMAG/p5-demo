@@ -41,7 +41,7 @@ function Firework(){
 
 
     const setup = (p5, canvasParentRef) => {
-        p5.createCanvas(p5.windowWidth, p5.windowHeight).parent(canvasParentRef);
+        p5.createCanvas(p5.windowWidth, p5.windowHeight-70).parent(canvasParentRef);
         p5.background(0);
 				p5.colorMode(p5.HSB);
 				p5.frameRate(60);
@@ -99,7 +99,7 @@ function Firework(){
         //煙火發射器
 				p5.push();
 				p5.fill(255);
-				p5.rect(p5.windowWidth/2 - 20, p5.windowHeight -70 , 40, 70);
+				p5.rect(p5.windowWidth/2 - 20, p5.windowHeight -140 , 40, 70);
 				p5.pop();
 		};
 
@@ -113,7 +113,7 @@ function Firework(){
 
 			const clickableArea = {
 				x: p5.windowWidth/2 - 20,
-				y: p5.windowHeight - 70,
+				y: p5.windowHeight - 140,
 				width: 40,
 				height: 70
 			};
@@ -217,6 +217,7 @@ function Firework(){
 					mousePressed={mousePressed}
 					windowResized={windowResized}
 					touchStarted={touchStarted}
+					style={{ touchAction: 'none', overflow:'hidden'}}
 				/>
 				<Nav/>
 			</div>

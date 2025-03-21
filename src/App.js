@@ -22,7 +22,7 @@ function App() {
   //畫出canvas畫布
   const setup = (p5, canvasParentRef) => {
     //設定畫布大小然後回傳給父層
-    p5.createCanvas(p5.windowWidth, p5.windowHeight).parent(canvasParentRef);
+    p5.createCanvas(p5.windowWidth, p5.windowHeight-80).parent(canvasParentRef);
     //設定背景顏色
     p5.background(0,0,0);
     //設定每秒執行次數 預設是60
@@ -140,6 +140,7 @@ function App() {
         setup={setup}
         draw={draw}
         windowResized={windowResized}
+        style={{ overflowY:'hidden'}}
       />
       <Nav/>
     </div>

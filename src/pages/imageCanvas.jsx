@@ -10,19 +10,16 @@ function ImageCanvas(){
   const [ image2, setImage2 ] = useState(null);
   const [ rotate, setRotate ] = useState(0);
   const [ isOverlaid, setIsOverlaid ] = useState(false);
-  const [ isLoading, setIsloading ] = useState(true);
   
   //載入底圖
   useEffect(() => {
     const img = new Image();
     img.src = '/images/porsche.png';
     img.onload = () => {
-      setImage(img);
-      setIsloading(false);
+      setImage(img);     
     };
     img.onerror = () => {
       console.error('圖片載入失敗');
-      setIsloading(false);
     }
   },[]);
 
@@ -32,11 +29,9 @@ function ImageCanvas(){
     img.src = '/images/porscheLogo.png';
     img.onload = () => {
       setImage2(img);
-      setIsloading(false);
     };
     img.onerror = () => {
       console.error('圖片載入失敗');
-      setIsloading(false);
     }
   },[]);
 
@@ -88,10 +83,8 @@ function ImageCanvas(){
   //疊加後的圖片
   useEffect(() => {
     if(!image || !image2) return;
-    console.log(isOverlaid);
     if(isOverlaid === false) return;
 
-    
     const canvas = canvasOverRef.current;
     if(!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -116,7 +109,7 @@ function ImageCanvas(){
     ctx.drawImage(image2, -imgWidth/2, -imgHeight/2, imgWidth, imgHeight);
     ctx.restore();
   
-  },[isOverlaid, rotate])
+  },[isOverlaid, rotate, image, image2]);
 
   //匯出圖片
   const exportImage = () => {
@@ -155,13 +148,14 @@ function ImageCanvas(){
           ) : (
             <>
             <canvas ref={canvasOverRef}/>
+            <div style={{ width:'300px', height:'300px'}}/>
             </>
           ) }
         </div>
       </div>
       <div className = 'button-container'>
         <button onClick={() => setRotate(rotate + Math.PI/4)}>
-          旋轉右1圖片
+          旋轉下圖片
         </button>
         <button onClick={() => setIsOverlaid(!isOverlaid)}>
           {isOverlaid ? '取消疊加': '疊加'}

@@ -130,31 +130,53 @@ function Scratch(){
   // 觸控事件處理
   const touchStarted = (p5) => {
     isInteractingRef.current = true;
-    // 處理所有觸控點
-    for (let i = 0; i < p5.touches.length; i++) {
-      const touch = p5.touches[i];
-      handleErase(p5, touch.x, touch.y);
+    
+    // 檢查是否有觸控點
+    if (p5.touches.length === 0) return true;
+
+    // 檢查觸控點是否在圖片範圍內
+    const touch = p5.touches[0];
+    const isInBounds = touch.x >= imgXRef.current && 
+                      touch.x <= imgXRef.current + imgWidthRef.current &&
+                      touch.y >= imgYRef.current && 
+                      touch.y <= imgYRef.current + imgHeightRef.current;
+
+    if (isInBounds) {
+      // 處理所有觸控點
+      for (let i = 0; i < p5.touches.length; i++) {
+        handleErase(p5, p5.touches[i].x, p5.touches[i].y);
+      }
+      return false; // 只在圖片範圍內阻止默認行為
     }
-    // 防止默認行為（如滾動）
-    return false;
+    return true;
   };
 
   const touchMoved = (p5) => {
-    if (!imageReady) return;
+    if (!imageReady) return true;
     
-    // 處理所有觸控點
-    for (let i = 0; i < p5.touches.length; i++) {
-      handleErase(p5, p5.touches[i].x, p5.touches[i].y);
+    // 檢查是否有觸控點
+    if (p5.touches.length === 0) return true;
+    
+    // 檢查觸控點是否在圖片範圍內
+    const touch = p5.touches[0];
+    const isInBounds = touch.x >= imgXRef.current && 
+                      touch.x <= imgXRef.current + imgWidthRef.current &&
+                      touch.y >= imgYRef.current && 
+                      touch.y <= imgYRef.current + imgHeightRef.current;
+
+    if (isInBounds) {
+      // 處理所有觸控點
+      for (let i = 0; i < p5.touches.length; i++) {
+        handleErase(p5, p5.touches[i].x, p5.touches[i].y);
+      }
+      return false; // 只在圖片範圍內阻止默認行為
     }
-    
-    // 防止默認行為（如滾動）
-    return false;
+    return true;
   };
 
   const touchEnded = () => {
     isInteractingRef.current = false;
-    // 防止默認行為
-    return false;
+    return true; // 允許其他觸控行為
   };
 
   const windowResized = (p5) => {
@@ -174,7 +196,10 @@ function Scratch(){
 
 
   return(
-    <div>
+    <div style={{ 
+      touchAction: 'none',  // 禁止所有觸控行為
+      overflow: 'hidden'    // 防止滾動
+    }}>
       <Sketch 
         setup={setup}
         draw={draw} 
@@ -185,6 +210,7 @@ function Scratch(){
         touchMoved={touchMoved}
         touchEnded={touchEnded}
         windowResized={windowResized}
+        style={{ touchAction: 'none' }}  // 在 canvas 上也禁止觸控行為
       />
       <Nav/>
     </div>

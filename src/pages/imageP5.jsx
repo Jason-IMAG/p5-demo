@@ -115,15 +115,16 @@ function Image(){
           </div>
         ) : (
           <>
-          <div className='canvas-container'>
+          <div className='canvas-container' style={{display: 'flex', alignItems:'center', justifyContent:'center'}}>
             <Sketch
               setup={setupCombined}
               draw={drawCombined}
             />
+            <div style={{ width:'300px', height:'300px'}}/>
         </div>
         </>
       )}
-      <div className="button-container">
+      <div className="button-container" >
         <div>
           <button onClick={rotateRight}>
             旋轉右1圖片

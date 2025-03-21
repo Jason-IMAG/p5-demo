@@ -5,14 +5,13 @@ import Nav from '../componet/nav';
 function Rainny() {
   let drops = [];
   const dropsCount = 500;
-  const umbrellaSize = 300;
-  
+  const umbrellaSize = 200
   let minHeight ;
 
   // setup() 函數在畫布創建時執行一次
   const setup = (p5, canvasParentRef) => {
     // 創建畫布並將其附加到父元素
-    p5.createCanvas(p5.windowWidth, p5.windowHeight).parent(canvasParentRef);
+    p5.createCanvas(p5.windowWidth, p5.windowHeight-80).parent(canvasParentRef);
     p5.background(100);
 
     minHeight = p5.windowHeight*0.8;
@@ -132,12 +131,13 @@ function Rainny() {
   };
 
   return (
-    <div className="App">
+    <div className="App" >
       <Sketch
         setup={setup}
         draw={draw}
         unmount={cleanup}
         windowResized={windowResized}
+        style={{ touchAction: 'none', overflow:'hidden'}}
       />
       <Nav/>
     </div>

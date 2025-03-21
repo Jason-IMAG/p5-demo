@@ -29,7 +29,7 @@ function Snow (){
   },[])
 
   const setup = (p5, canvasParentRef) => {
-    p5.createCanvas(p5.windowWidth, p5.windowHeight).parent(canvasParentRef);
+    p5.createCanvas(p5.windowWidth, p5.windowHeight-80).parent(canvasParentRef);
     p5.background(0);
     setP5(p5);
   }
@@ -95,7 +95,7 @@ function Snow (){
       p5.fill(255, 0, 0);
       p5.noStroke();
       p5.triangle(
-        pos.x, pos.y-45, 
+        pos.x, pos.y-47, 
         pos.x + p5.windowWidth/3, pos.y+23, 
         pos.x - p5.windowWidth/3, pos.y+23 
       )
@@ -175,6 +175,7 @@ function Snow (){
         setup={setup}
         draw={draw}
         windowResized={windowResized}
+        style={{ touchAction: 'none', overflow:'hidden'}}
       />
       <Nav/>
     </div>
